@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>相関と回帰分析学習アプリ</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/regression@2.0.1/dist/regression.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>相関と回帰分析学習アプリ</h1>
+        
+        <div class="controls">
+            <div class="example-selector">
+                <h2>データ例の選択</h2>
+                <button id="negative-correlation">負の相関</button>
+                <button id="no-correlation">相関なし</button>
+                <button id="positive-correlation">正の相関</button>
+                <button id="custom-data">カスタムデータ</button>
+            </div>
+            
+            <div class="data-input" id="data-input-container">
+                <h2>データ入力</h2>
+                <p>カンマ区切りでX,Y座標を入力してください（例: 1,2）</p>
+                <textarea id="data-input" rows="10" placeholder="X,Y
+1,2
+3,4
+5,6"></textarea>
+                <button id="plot-data">データをプロット</button>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <canvas id="scatter-plot"></canvas>
+        </div>
+        
+        <div class="results">
+            <h2>分析結果</h2>
+            <div class="result-box">
+                <h3>相関係数 (r)</h3>
+                <div id="correlation-value">-</div>
+                <div id="correlation-strength">-</div>
+            </div>
+            <div class="result-box">
+                <h3>回帰分析</h3>
+                <div id="regression-equation">-</div>
+                <div id="determination-coefficient">-</div>
+            </div>
+        </div>
+        
+        <div class="explanation">
+            <h2>相関係数と相関の強さ</h2>
+            <table>
+                <tr>
+                    <th>相関係数(r)</th>
+                    <th>相関の強さ</th>
+                </tr>
+                <tr>
+                    <td>0.7 < |r| ≤ 1</td>
+                    <td>強い</td>
+                </tr>
+                <tr>
+                    <td>0.4 < |r| ≤ 0.7</td>
+                    <td>中程度</td>
+                </tr>
+                <tr>
+                    <td>0.2 < |r| ≤ 0.4</td>
+                    <td>弱い</td>
+                </tr>
+                <tr>
+                    <td>|r| ≤ 0.2</td>
+                    <td>相関なし</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
