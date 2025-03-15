@@ -8,16 +8,20 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // ボタン要素の取得
     const negativeBtn = document.getElementById('negative-correlation');
+    const moderateNegativeBtn = document.getElementById('moderate-negative-correlation');
     const noneBtn = document.getElementById('no-correlation');
+    const moderatePositiveBtn = document.getElementById('moderate-positive-correlation');
     const positiveBtn = document.getElementById('positive-correlation');
     const customBtn = document.getElementById('custom-data');
     const plotBtn = document.getElementById('plot-data');
     
     // 要素が存在するか確認
-    if (!negativeBtn || !noneBtn || !positiveBtn || !customBtn || !plotBtn) {
+    if (!negativeBtn || !moderateNegativeBtn || !noneBtn || !moderatePositiveBtn || !positiveBtn || !customBtn || !plotBtn) {
         console.error('一部のボタン要素が見つかりません');
         if (!negativeBtn) console.error('負の相関ボタンが見つかりません');
+        if (!moderateNegativeBtn) console.error('中程度の負の相関ボタンが見つかりません');
         if (!noneBtn) console.error('相関なしボタンが見つかりません');
+        if (!moderatePositiveBtn) console.error('中程度の正の相関ボタンが見つかりません');
         if (!positiveBtn) console.error('正の相関ボタンが見つかりません');
         if (!customBtn) console.error('カスタムデータボタンが見つかりません');
         if (!plotBtn) console.error('プロットボタンが見つかりません');
@@ -30,9 +34,19 @@ document.addEventListener('DOMContentLoaded', () => {
         loadExample('negative');
     });
     
+    moderateNegativeBtn.addEventListener('click', function() {
+        console.log('中程度の負の相関ボタンがクリックされました');
+        loadExample('moderate-negative');
+    });
+    
     noneBtn.addEventListener('click', function() {
         console.log('相関なしボタンがクリックされました');
         loadExample('none');
+    });
+    
+    moderatePositiveBtn.addEventListener('click', function() {
+        console.log('中程度の正の相関ボタンがクリックされました');
+        loadExample('moderate-positive');
     });
     
     positiveBtn.addEventListener('click', function() {
@@ -90,8 +104,22 @@ function loadExample(type) {
                 const x = Math.floor(Math.random() * 100) + 1; // 1から100までのランダムな値
                 // 負の相関になるように、xが大きいほどyが小さくなるようにする（ばらつきあり）
                 const baseY = 100 - x; // 基本的な負の相関
-                const noise = Math.floor(Math.random() * 30) - 15; // -15から15までのランダムなノイズ
-                const y = Math.max(1, Math.min(100, baseY + noise)); // 1から100の範囲に収める
+                const noise = Math.floor(Math.random() * 21); // 0から20までのランダムなノイズ
+                // ノイズを正負ランダムに適用（最大値最小値の制限なし）
+                const y = baseY + (Math.random() < 0.5 ? noise : -noise);
+                data.push([x, y]);
+            }
+            break;
+        case 'moderate-negative':
+            // 中程度の負の相関のサンプルデータ（100個）
+            data = [];
+            for (let i = 0; i < 100; i++) {
+                const x = Math.floor(Math.random() * 100) + 1; // 1から100までのランダムな値
+                // 中程度の負の相関になるように、xが大きいほどyが小さくなるようにする（より大きなばらつきあり）
+                const baseY = 100 - x; // 基本的な負の相関
+                const noise = Math.floor(Math.random() * 70); // 0から70までのランダムなノイズ（より大きなノイズ）
+                // ノイズを正負ランダムに適用
+                const y = baseY + (Math.random() < 0.5 ? noise : -noise);
                 data.push([x, y]);
             }
             break;
@@ -105,6 +133,19 @@ function loadExample(type) {
                 data.push([x, y]);
             }
             break;
+        case 'moderate-positive':
+            // 中程度の正の相関のサンプルデータ（100個）
+            data = [];
+            for (let i = 0; i < 100; i++) {
+                const x = Math.floor(Math.random() * 100) + 1; // 1から100までのランダムな値
+                // 中程度の正の相関になるように、xが大きいほどyも大きくなるようにする（より大きなばらつきあり）
+                const baseY = x; // 基本的な正の相関
+                const noise = Math.floor(Math.random() * 70); // 0から70までのランダムなノイズ（より大きなノイズ）
+                // ノイズを正負ランダムに適用
+                const y = baseY + (Math.random() < 0.5 ? noise : -noise);
+                data.push([x, y]);
+            }
+            break;
         case 'positive':
             // 正の相関のサンプルデータ（100個）- さらにばらつきを持たせる
             data = [];
@@ -112,8 +153,9 @@ function loadExample(type) {
                 const x = Math.floor(Math.random() * 100) + 1; // 1から100までのランダムな値
                 // 正の相関になるように、xが大きいほどyも大きくなるようにする（ばらつきあり）
                 const baseY = x; // 基本的な正の相関
-                const noise = Math.floor(Math.random() * 30) - 15; // -15から15までのランダムなノイズ
-                const y = Math.max(1, Math.min(100, baseY + noise)); // 1から100の範囲に収める
+                const noise = Math.floor(Math.random() * 21); // 0から20までのランダムなノイズ
+                // ノイズを正負ランダムに適用（最大値最小値の制限なし）
+                const y = baseY + (Math.random() < 0.5 ? noise : -noise);
                 data.push([x, y]);
             }
             break;
@@ -214,6 +256,10 @@ function updateChart() {
     const result = regression.linear(currentData);
     const slope = result.equation[0];
     const intercept = result.equation[1];
+    
+    // 相関係数の計算
+    const correlation = calculateCorrelation();
+    const correlationStrength = getCorrelationStrength(correlation);
     
     // 回帰直線のデータポイント
     const regressionLine = [];
@@ -322,6 +368,21 @@ function updateChart() {
                     pointRadius: 0,
                     fill: true
                 },
+                // 相関係数と相関の強さを表示するスタンプ
+                {
+                    label: `相関係数: r = ${correlation.toFixed(4)}`,
+                    data: [{x: maxX * 0.75, y: maxY * 0.9}],
+                    backgroundColor: 'rgba(0, 0, 0, 0)',
+                    pointRadius: 0,
+                    pointHoverRadius: 0
+                },
+                {
+                    label: `${correlationStrength}相関`,
+                    data: [{x: maxX * 0.75, y: maxY * 0.8}],
+                    backgroundColor: 'rgba(0, 0, 0, 0)',
+                    pointRadius: 0,
+                    pointHoverRadius: 0
+                },
                 {
                     label: 'X軸補助線',
                     data: xAxisLineData,
@@ -410,6 +471,35 @@ function updateChart() {
         }
     });
     
+    // 相関係数と相関の強さをスタンプとして表示
+    const correlationStamp = document.createElement('div');
+    correlationStamp.className = 'correlation-stamp';
+    correlationStamp.style.position = 'absolute';
+    correlationStamp.style.top = '20px';
+    correlationStamp.style.right = '20px';
+    correlationStamp.style.padding = '10px';
+    correlationStamp.style.backgroundColor = getCorrelationColor(correlation);
+    correlationStamp.style.color = 'white';
+    correlationStamp.style.borderRadius = '5px';
+    correlationStamp.style.fontWeight = 'bold';
+    correlationStamp.style.fontSize = '18px';
+    correlationStamp.style.zIndex = '1000';
+    correlationStamp.innerHTML = `
+        <div>相関係数: r = ${correlation.toFixed(4)}</div>
+        <div>${correlationStrength}相関</div>
+    `;
+    
+    // 既存のスタンプがあれば削除
+    const existingStamp = document.querySelector('.correlation-stamp');
+    if (existingStamp) {
+        existingStamp.remove();
+    }
+    
+    // チャートコンテナにスタンプを追加
+    const chartContainer = document.querySelector('.chart-container');
+    chartContainer.style.position = 'relative';
+    chartContainer.appendChild(correlationStamp);
+    
     // グラフの説明を追加
     addChartExplanation(slope, intercept, calculateCorrelation(), result.r2);
 }
@@ -428,32 +518,60 @@ function addChartExplanation(slope, intercept, correlation, r2) {
     explanationDiv.className = 'chart-explanation';
     explanationDiv.innerHTML = `
         <h3>グラフの説明</h3>
-        <ul>
-            <li><span class="color-dot data-point"></span> <strong>データポイント</strong>: 散布図上の各点</li>
-            <li><span class="color-dot regression-line"></span> <strong>回帰直線</strong>: Y = ${slope.toFixed(2)}X + ${intercept.toFixed(2)}</li>
-            <li><span class="color-dot correlation-triangle"></span> <strong>回帰直線の傾き (a)</strong>: ${slope.toFixed(4)} - 回帰直線に接する三角形の高さと底辺の比率</li>
-            <li><span class="color-dot y-intercept"></span> <strong>Y切片 (b)</strong>: ${intercept.toFixed(2)} - Y軸との交点</li>
-            <li><strong>相関係数 (r)</strong>: ${correlation.toFixed(4)} - 変数間の関連の強さと方向</li>
-            <li><strong>決定係数 (R²)</strong>: ${r2.toFixed(4)} - モデルの当てはまりの良さ</li>
-        </ul>
+        <div class="explanation-grid">
+            <div class="explanation-item">
+                <span class="color-dot data-point"></span>
+                <div class="explanation-text">
+                    <strong>データポイント</strong>
+                    <span>散布図上の各点</span>
+                </div>
+            </div>
+            <div class="explanation-item">
+                <span class="color-dot regression-line"></span>
+                <div class="explanation-text">
+                    <strong>回帰直線</strong>
+                    <span>Y = ${slope.toFixed(2)}X + ${intercept.toFixed(2)}</span>
+                </div>
+            </div>
+            <div class="explanation-item">
+                <span class="color-dot correlation-triangle"></span>
+                <div class="explanation-text">
+                    <strong>傾き (a)</strong>
+                    <span>${slope.toFixed(4)}</span>
+                </div>
+            </div>
+            <div class="explanation-item">
+                <span class="color-dot y-intercept"></span>
+                <div class="explanation-text">
+                    <strong>Y切片 (b)</strong>
+                    <span>${intercept.toFixed(2)}</span>
+                </div>
+            </div>
+            <div class="explanation-item">
+                <div class="explanation-text">
+                    <strong>相関係数 (r)</strong>
+                    <span>${correlation.toFixed(4)}</span>
+                </div>
+            </div>
+            <div class="explanation-item">
+                <div class="explanation-text">
+                    <strong>決定係数 (R²)</strong>
+                    <span>${r2.toFixed(4)}</span>
+                </div>
+            </div>
+        </div>
     `;
     
-    // チャートコンテナの後に挿入
-    const chartContainer = document.querySelector('.chart-container');
-    chartContainer.after(explanationDiv);
+    // main-contentの後に挿入
+    const mainContent = document.querySelector('.main-content');
+    mainContent.after(explanationDiv);
 }
 
 // 統計量の計算と表示
 function calculateAndDisplayStatistics() {
     // 相関係数の計算
     const correlation = calculateCorrelation();
-    
-    // 相関係数の表示
-    document.getElementById('correlation-value').textContent = `r = ${correlation.toFixed(4)}`;
-    
-    // 相関の強さの判定と表示
-    const strength = getCorrelationStrength(correlation);
-    document.getElementById('correlation-strength').textContent = strength;
+    const correlationStrength = getCorrelationStrength(correlation);
     
     // 回帰分析
     const result = regression.linear(currentData);
@@ -461,11 +579,26 @@ function calculateAndDisplayStatistics() {
     const intercept = result.equation[1];
     const r2 = result.r2;
     
-    // 回帰式の表示
-    document.getElementById('regression-equation').textContent = `Y = ${slope.toFixed(4)}X + ${intercept.toFixed(4)}`;
+    // 統計情報をコンソールに出力（デバッグ用）
+    console.log({
+        correlation: correlation.toFixed(4),
+        strength: correlationStrength,
+        equation: `Y = ${slope.toFixed(4)}X + ${intercept.toFixed(4)}`,
+        r2: r2.toFixed(4)
+    });
     
-    // 決定係数の表示
-    document.getElementById('determination-coefficient').textContent = `決定係数 (R²) = ${r2.toFixed(4)}`;
+    // 相関係数と相関の強さを表示
+    const correlationValueElement = document.getElementById('correlation-value');
+    const correlationStrengthElement = document.getElementById('correlation-strength');
+    
+    if (correlationValueElement && correlationStrengthElement) {
+        correlationValueElement.textContent = correlation.toFixed(4);
+        correlationStrengthElement.textContent = correlationStrength;
+        
+        // 相関の強さに応じて色を変更
+        correlationValueElement.style.color = getCorrelationColor(correlation);
+        correlationStrengthElement.style.color = getCorrelationColor(correlation);
+    }
 }
 
 // 相関係数の計算
@@ -507,10 +640,28 @@ function getCorrelationStrength(r) {
     if (absR <= 0.2) {
         return '相関なし';
     } else if (absR <= 0.4) {
-        return '弱い相関';
+        return '弱い';
     } else if (absR <= 0.7) {
-        return '中程度の相関';
+        return '中程度';
     } else {
-        return '強い相関';
+        return '強い';
+    }
+}
+
+// 相関係数に基づいて色を取得
+function getCorrelationColor(r) {
+    const absR = Math.abs(r);
+    
+    if (absR <= 0.2) {
+        return 'rgba(150, 150, 150, 0.8)'; // グレー（相関なし）
+    } else if (absR <= 0.4) {
+        return 'rgba(255, 193, 7, 0.8)'; // 黄色（弱い相関）
+    } else if (absR <= 0.7) {
+        return 'rgba(255, 87, 34, 0.8)'; // オレンジ（中程度の相関）
+    } else {
+        // 正の相関か負の相関かで色を変える
+        return r > 0 
+            ? 'rgba(76, 175, 80, 0.8)' // 緑（強い正の相関）
+            : 'rgba(244, 67, 54, 0.8)'; // 赤（強い負の相関）
     }
 }

@@ -12,13 +12,15 @@
 <body>
     <div class="container">
         <div class="controls">
-    <div class="example-selector">
-        <h2>データ例の選択</h2>
-        <button id="negative-correlation">負の相関</button>
-        <button id="no-correlation">相関なし</button>
-        <button id="positive-correlation">正の相関</button>
-        <button id="custom-data">カスタムデータ</button>
-    </div>
+            <div class="example-selector">
+                <h2>データ例の選択</h2>
+                <button id="negative-correlation">負の相関</button>
+                <button id="moderate-negative-correlation">中程度の負の相関</button>
+                <button id="no-correlation">相関なし</button>
+                <button id="moderate-positive-correlation">中程度の正の相関</button>
+                <button id="positive-correlation">正の相関</button>
+                <button id="custom-data">カスタムデータ</button>
+            </div>
             
             <div class="data-input" id="data-input-container">
                 <h2>データ入力</h2>
@@ -31,48 +33,44 @@
             </div>
         </div>
         
-        <div class="chart-container">
-            <canvas id="scatter-plot"></canvas>
-        </div>
-        
-        <div class="results">
-            <h2>分析結果</h2>
-            <div class="result-box">
-                <h3>相関係数 (r)</h3>
-                <div id="correlation-value">-</div>
-                <div id="correlation-strength">-</div>
+        <div class="main-content">
+            <div class="chart-container">
+                <canvas id="scatter-plot"></canvas>
             </div>
-            <div class="result-box">
-                <h3>回帰分析</h3>
-                <div id="regression-equation">-</div>
-                <div id="determination-coefficient">-</div>
+            
+            <div class="correlation-table-container">
+                <h3>相関係数と相関の強さ</h3>
+                <table id="correlation-table">
+                    <thead>
+                        <tr>
+                            <th>相関係数(r)</th>
+                            <th>相関の強さ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>0.7 < |r| ≤ 1</td>
+                            <td>強い</td>
+                        </tr>
+                        <tr>
+                            <td>0.4 < |r| ≤ 0.7</td>
+                            <td>中程度</td>
+                        </tr>
+                        <tr>
+                            <td>0.2 < |r| ≤ 0.4</td>
+                            <td>弱い</td>
+                        </tr>
+                        <tr>
+                            <td>|r| ≤ 0.2</td>
+                            <td>相関なし</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="current-correlation" class="current-correlation">
+                    <p>現在の相関係数: <span id="correlation-value">-</span></p>
+                    <p>相関の強さ: <span id="correlation-strength">-</span></p>
+                </div>
             </div>
-        </div>
-        
-        <div class="explanation">
-            <h2>相関係数と相関の強さ</h2>
-            <table>
-                <tr>
-                    <th>相関係数(r)</th>
-                    <th>相関の強さ</th>
-                </tr>
-                <tr>
-                    <td>0.7 < |r| ≤ 1</td>
-                    <td>強い</td>
-                </tr>
-                <tr>
-                    <td>0.4 < |r| ≤ 0.7</td>
-                    <td>中程度</td>
-                </tr>
-                <tr>
-                    <td>0.2 < |r| ≤ 0.4</td>
-                    <td>弱い</td>
-                </tr>
-                <tr>
-                    <td>|r| ≤ 0.2</td>
-                    <td>相関なし</td>
-                </tr>
-            </table>
         </div>
     </div>
     
