@@ -403,12 +403,7 @@ function updateChart() {
                     }
                 },
                 legend: {
-                    labels: {
-                        filter: function(item, chart) {
-                            // 一部のラベルを非表示
-                            return ![2, 4, 5].includes(item.datasetIndex);
-                        }
-                    }
+                    display: false // 凡例を非表示にする
                 }
             }
         }
