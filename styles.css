@@ -130,11 +130,69 @@ tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
-.explanation {
+.explanation, .chart-explanation {
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.chart-explanation ul {
+    list-style-type: none;
+    padding-left: 10px;
+}
+
+.chart-explanation li {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.color-dot {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.color-dot.data-point {
+    background-color: rgba(54, 162, 235, 0.6);
+}
+
+.color-dot.regression-line {
+    background-color: rgba(255, 99, 132, 1);
+}
+
+.color-dot.correlation-triangle {
+    background-color: rgba(75, 192, 192, 1);
+    position: relative;
+}
+
+.color-dot.correlation-triangle::after {
+    content: 'a';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.color-dot.y-intercept {
+    background-color: rgba(255, 159, 64, 1);
+    border-radius: 0;
+    transform: rotate(45deg);
+    position: relative;
+}
+
+.color-dot.y-intercept::after {
+    content: 'b';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    font-size: 10px;
+    font-weight: bold;
 }
 
 @media (max-width: 768px) {

@@ -6,6 +6,7 @@
     <title>相関と回帰分析学習アプリ</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
     <script src="https://cdn.jsdelivr.net/npm/regression@2.0.1/dist/regression.min.js"></script>
 </head>
 <body>
@@ -13,13 +14,13 @@
         <h1>相関と回帰分析学習アプリ</h1>
         
         <div class="controls">
-            <div class="example-selector">
-                <h2>データ例の選択</h2>
-                <button id="negative-correlation">負の相関</button>
-                <button id="no-correlation">相関なし</button>
-                <button id="positive-correlation">正の相関</button>
-                <button id="custom-data">カスタムデータ</button>
-            </div>
+    <div class="example-selector">
+        <h2>データ例の選択</h2>
+        <button id="negative-correlation">負の相関</button>
+        <button id="no-correlation">相関なし</button>
+        <button id="positive-correlation">正の相関</button>
+        <button id="custom-data">カスタムデータ</button>
+    </div>
             
             <div class="data-input" id="data-input-container">
                 <h2>データ入力</h2>
