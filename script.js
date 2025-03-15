@@ -90,7 +90,7 @@ function loadExample(type) {
                 const x = Math.floor(Math.random() * 100) + 1; // 1から100までのランダムな値
                 // 負の相関になるように、xが大きいほどyが小さくなるようにする（ばらつきあり）
                 const baseY = 100 - x; // 基本的な負の相関
-                const noise = Math.floor(Math.random() * 40) - 20; // -20から20までのランダムなノイズ
+                const noise = Math.floor(Math.random() * 30) - 15; // -15から15までのランダムなノイズ
                 const y = Math.max(1, Math.min(100, baseY + noise)); // 1から100の範囲に収める
                 data.push([x, y]);
             }
@@ -112,7 +112,7 @@ function loadExample(type) {
                 const x = Math.floor(Math.random() * 100) + 1; // 1から100までのランダムな値
                 // 正の相関になるように、xが大きいほどyも大きくなるようにする（ばらつきあり）
                 const baseY = x; // 基本的な正の相関
-                const noise = Math.floor(Math.random() * 40) - 20; // -20から20までのランダムなノイズ
+                const noise = Math.floor(Math.random() * 30) - 15; // -15から15までのランダムなノイズ
                 const y = Math.max(1, Math.min(100, baseY + noise)); // 1から100の範囲に収める
                 data.push([x, y]);
             }
@@ -228,7 +228,7 @@ function updateChart() {
     
     // 原点を基準とした三角形を表示するためのデータ
     // データの範囲に合わせて単位点の位置を調整
-    const unitX = maxX * 0.3; // X軸上の「1」の位置をデータの最大値の30%に設定
+    const unitX = maxX * 0.15; // X軸上の「1」の位置をデータの最大値の15%に設定（小さくする）
     
     // 基準となる三角形データ（原点から単位1の三角形）
     const triangleData = [];
@@ -311,16 +311,7 @@ function updateChart() {
                     borderWidth: 2,
                     fill: false
                 },
-                {
-                    label: '基準三角形 (傾き1:1)',
-                    data: triangleData,
-                    type: 'line',
-                    borderColor: 'rgba(150, 150, 150, 0.5)',
-                    borderDash: [5, 5],
-                    borderWidth: 1,
-                    pointRadius: 0,
-                    fill: false
-                },
+                // 基準三角形は非表示
                 {
                     label: `回帰直線の傾き a = ${slope.toFixed(2)}（直接接する三角形）`,
                     data: slopeTriangleData,
